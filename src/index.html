@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>Lost in Space</title>
+</head>
+<script language="javascript">
+ship = {
+  oxygen: 18,
+  co2: 4,
+  clean_water: 100,
+  waste_water: 100,
+  food: 100,
+  distance: 0
+};
+
+function tick() {
+  oxygen -= 0.5;
+  co2 += 0.5;
+  clean_water -= 10;
+  waste_water += 10;
+  food -= 8;
+  distance += 1;
+}
+
+function hydroponic() {
+  if(ship.waste_water > 1) {
+    ship.waste_water -= 1;
+    ship.clean_water += 1;
+    prod = ship.co2/4;
+    food += prod;
+    oxygen += prod/10;
+    co2 -= prod/10;
+  } else if(ship.clean_water > 1) {
+    prod = ship.co2/4;
+    food += prod;
+    oxygen += prod/10;
+    co2 -= prod/10;
+  }
+}
+
+function water() {
+  if(ship.waste_water > 5) {
+    ship.waste_water -= 5;
+    ship.clean_water += 5;
+  }
+}
+
+function oxygen() {
+  if(ship.oxygen < 18) {
+    ship.oxygen += 0.5;
+    ship.co2 -= 0.5;
+  }
+}
+
+function empty() {
+}
+
+function room(func, reliability) {
+  return {
+    reliability: reliability,
+    action: func
+  }
+}
+
+rooms = [
+[room(water, 10), room(hydroponic, 10), room(hydroponic, 10)],
+[room(empty, 10), room(oxygen, 10), room(hydroponic, 10)],
+[room(empty, 10), room(empty, 10), room(empty, 10)]
+];
+
+function createRoom(elem, room) {
+  var list = elem.appendChild(document.createElement("dl"));
+  list.appendChild(document.createElement("dt")).textContent = "type";
+  list.appendChild(document.createElement("dd")).textContent = room.action.name;
+  list.appendChild(document.createElement("dt")).textContent = "reliability";
+  list.appendChild(document.createElement("dd")).textContent = room.reliability;  
+} 
+
+window.onload = function () {
+  for(var r = 0; r < 3; ++r) {
+    var row = document.getElementById("ship").appendChild(document.createElement("tr"));
+    for(var c = 0; c < 3; ++c) {
+      var col = row.appendChild(document.createElement("td"));
+      col.setAttribute("id", c + "," + r);
+      createRoom(col, rooms[r][c]);
+    }
+  }
+};
+</script>
+<style>
+</style>
+<body>
+<header>
+<h1>Lost in Space</h1>
+</header>
+<main>
+<section>
+<dl id="stats">
+</dl>
+</section>
+<section>
+  <table id="ship">
+  </table>
+</section>
+<section>
+</section>
+</main>
+</body>
+</html>
