@@ -73,7 +73,15 @@ function createRoom(elem, room) {
   list.appendChild(document.createElement("dd")).textContent = room.action.name;
   list.appendChild(document.createElement("dt")).textContent = "reliability";
   list.appendChild(document.createElement("dd")).textContent = room.reliability;  
-} 
+}
+
+function rooms_tick() {
+  for(var c = 0; c < rooms.length; ++c) {
+    for(var r = 0; r < rooms[c].length; ++r) {
+      rooms[c][r].action();
+    }
+  }
+}
 
 function display_stats() {
   for(var stat in ship) {
@@ -114,7 +122,7 @@ window.onload = function () {
   <table id="ship">
   </table>
 </section>
-<button onclick="tick(); display_stats()">Tick</button>
+<button onclick="rooms_tick(); tick(); display_stats()">Tick</button>
 </main>
 </body>
 </html>
