@@ -13,27 +13,27 @@ ship = {
 };
 
 function tick() {
-  oxygen -= 0.5;
-  co2 += 0.5;
-  clean_water -= 10;
-  waste_water += 10;
-  food -= 8;
-  distance += 1;
+  ship.oxygen -= 0.5;
+  ship.co2 += 0.5;
+  ship.clean_water -= 10;
+  ship.waste_water += 10;
+  ship.food -= 8;
+  ship.distance += 1;
 }
 
 function hydroponic() {
   if(ship.waste_water > 1) {
     ship.waste_water -= 1;
     ship.clean_water += 1;
-    prod = ship.co2/4;
-    food += prod;
-    oxygen += prod/10;
-    co2 -= prod/10;
+    var prod = ship.co2/4;
+    ship.food += prod;
+    ship.oxygen += prod/10;
+    ship.co2 -= prod/10;
   } else if(ship.clean_water > 1) {
-    prod = ship.co2/4;
-    food += prod;
-    oxygen += prod/10;
-    co2 -= prod/10;
+    var prod = ship.co2/4;
+    ship.food += prod;
+    ship.oxygen += prod/10;
+    ship.co2 -= prod/10;
   }
 }
 
@@ -75,6 +75,12 @@ function createRoom(elem, room) {
   list.appendChild(document.createElement("dd")).textContent = room.reliability;  
 } 
 
+function display_stats() {
+  for(var stat in ship) {
+    document.getElementById("stat_" + stat).textContent = ship[stat];
+  }
+}
+
 window.onload = function () {
   for(var r = 0; r < 3; ++r) {
     var row = document.getElementById("ship").appendChild(document.createElement("tr"));
@@ -83,6 +89,13 @@ window.onload = function () {
       col.setAttribute("id", c + "," + r);
       createRoom(col, rooms[r][c]);
     }
+  }
+  var stats = document.getElementById("stats");
+  for(var stat in ship) {
+    stats.appendChild(document.createElement("dt")).textContent = stat;
+    var data = stats.appendChild(document.createElement("dd"));
+    data.setAttribute("id", "stat_" + stat);
+    data.textContent = ship[stat];
   }
 };
 </script>
@@ -101,8 +114,7 @@ window.onload = function () {
   <table id="ship">
   </table>
 </section>
-<section>
-</section>
+<button onclick="tick(); display_stats()">Tick</button>
 </main>
 </body>
 </html>
