@@ -54,6 +54,8 @@ function oxygen() {
 function empty() {
 }
 
+var room_types = [hydroponic, water, oxygen, empty];
+
 function room(func, reliability) {
   return {
     reliability: reliability,
@@ -70,9 +72,25 @@ rooms = [
 function createRoom(elem, room) {
   var list = elem.appendChild(document.createElement("dl"));
   list.appendChild(document.createElement("dt")).textContent = "type";
-  list.appendChild(document.createElement("dd")).textContent = room.action.name;
+  var select = list.appendChild(document.createElement("dd")).appendChild(document.createElement("select"));
+  for(var i = 0; i < room_types.length; ++i) {
+    var option = select.appendChild(document.createElement("option"))
+    option.setAttribute("value", i);
+    option.textContent = room_types[i].name;
+    if(room.action == room_types[i]) {
+      option.setAttribute("selected", "selected");
+    }
+  }
   list.appendChild(document.createElement("dt")).textContent = "reliability";
-  list.appendChild(document.createElement("dd")).textContent = room.reliability;  
+  var reliability = list.appendChild(document.createElement("dd"))
+  reliability.textContent = room.reliability;
+  select.onchange = function() {
+    if(room.reliability > 0) {
+      --room.reliability;
+      room.action = room_types[select.value];
+      reliability.textContent = room.reliability;
+    }
+  };
 }
 
 function rooms_tick() {
