@@ -8,51 +8,37 @@ td {
 </style>
 </head>
 <script language="javascript">
-ship = {
-  oxygen: 18,
-  co2: 4,
-  clean_water: 100,
-  waste_water: 100,
-  food: 100,
-  distance: 0
-};
+var crew = 10;
+
+var tickfrac = 10000; // fraction of a day
 
 function tick() {
-  ship.oxygen -= 0.5;
-  ship.co2 += 0.5;
-  ship.clean_water -= 10;
-  ship.waste_water += 10;
-  ship.food -= 8;
+  ship.oxygen -= crew*550/tickfrac;
+  ship.co2 += crew*550/tickfrac;
+  ship.clean_water -= crew*2/tickfrac;
+  ship.waste_water += crew*2/tickfrac;
+  ship.food -= crew*2/tickfrac;
   ship.distance += 1;
 }
 
 function hydroponic() {
-  if(ship.waste_water > 1) {
-    ship.waste_water -= 1;
-    ship.clean_water += 1;
-    var prod = ship.co2/4;
-    ship.food += prod;
-    ship.oxygen += prod/10;
-    ship.co2 -= prod/10;
-  } else if(ship.clean_water > 1) {
-    var prod = ship.co2/4;
-    ship.food += prod;
-    ship.oxygen += prod/10;
-    ship.co2 -= prod/10;
-  }
+  var prod = Math.min(500, Math.max(ship.co2, 0));
+  ship.food += prod/250/tickfrac; // Litres of CO2 to kilograms
+  ship.oxygen += prod/tickfrac;
+  ship.co2 -= prod/tickfrac;
 }
 
 function water() {
-  if(ship.waste_water > 5) {
-    ship.waste_water -= 5;
-    ship.clean_water += 5;
+  if(ship.waste_water > 20/tickfrac) {
+    ship.waste_water -= 20/tickfrac;
+    ship.clean_water += 20/tickfrac;
   }
 }
 
 function oxygen() {
-  if(ship.oxygen < 18) {
-    ship.oxygen += 0.5;
-    ship.co2 -= 0.5;
+  if(ship.oxygen < rooms.length*50*23.5/100 || ship.co2 > rooms.length*50*0.04/100) {
+    ship.oxygen += 3000/tickfrac;
+    ship.co2 -= 3000/tickfrac;
   }
 }
 
@@ -74,6 +60,15 @@ empty, oxygen, empty, hydroponic,
 empty, empty, oxygen, empty,
 hydroponic, empty, empty, empty
 ].map(room);
+
+ship = {
+  oxygen: rooms.length*50*23.5/100, // litres
+  co2: rooms.length*50*0.04/100, // litres
+  clean_water: 100, // litres
+  waste_water: 100, // litres
+  food: 100, // kilograms
+  distance: 0 // ticks
+};
 
 function createRoom(elem, room) {
   var list = elem.appendChild(document.createElement("dl"));
