@@ -19,6 +19,7 @@ function tick() {
   ship.waste_water += crew*2/tickfrac;
   ship.food -= crew*2/tickfrac;
   ship.distance += 1;
+  ship.days += 1/tickfrac;
 }
 
 function hydroponic() {
@@ -67,7 +68,8 @@ ship = {
   clean_water: 100, // litres
   waste_water: 100, // litres
   food: 100, // kilograms
-  distance: 0 // ticks
+  distance: 0, // ticks
+  days: 0
 };
 
 function createRoom(elem, room) {
