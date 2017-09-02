@@ -61,18 +61,19 @@ function empty() {
 
 var room_types = [hydroponic, water, oxygen, empty];
 
-function room(func, reliability) {
+function room(func) {
   return {
-    reliability: reliability,
+    reliability: 10,
     action: func
   }
 }
 
 rooms = [
-[room(water, 10), room(hydroponic, 10), room(hydroponic, 10)],
-[room(empty, 10), room(oxygen, 10), room(hydroponic, 10)],
-[room(empty, 10), room(empty, 10), room(empty, 10)]
-];
+water, empty, hydroponic, empty,
+empty, oxygen, empty, hydroponic,
+empty, empty, oxygen, empty,
+hydroponic, empty, empty, empty
+].map(room);
 
 function createRoom(elem, room) {
   var list = elem.appendChild(document.createElement("dl"));
@@ -99,10 +100,8 @@ function createRoom(elem, room) {
 }
 
 function rooms_tick() {
-  for(var r = 0; r < rooms.length; ++r) {
-    for(var c = 0; c < rooms[r].length; ++c) {
-      rooms[c][r].action();
-    }
+  for(var i = 0; i < rooms.length; ++i) {
+    rooms[i].action();
   }
 }
 
@@ -113,13 +112,15 @@ function display_stats() {
 }
 
 window.onload = function () {
-  for(var r = 0; r < rooms.length; ++r) {
-    var row = document.getElementById("ship").appendChild(document.createElement("tr"));
-    for(var c = 0; c < rooms[r].length; ++c) {
-      var col = row.appendChild(document.createElement("td"));
-      col.setAttribute("id", c + "," + r);
-      createRoom(col, rooms[r][c]);
+  var width = Math.ceil(Math.sqrt(rooms.length));
+  var row;
+  for(var i = 0; i < rooms.length; ++i) {
+    if(i % width == 0) {
+      row = document.getElementById("ship").appendChild(document.createElement("tr"));
     }
+    var col = row.appendChild(document.createElement("td"));
+    col.setAttribute("id", "room" + i);
+    createRoom(col, rooms[i]);
   }
   var stats = document.getElementById("stats");
   for(var stat in ship) {
