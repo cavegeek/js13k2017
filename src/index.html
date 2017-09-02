@@ -99,8 +99,8 @@ function createRoom(elem, room) {
 }
 
 function rooms_tick() {
-  for(var c = 0; c < rooms.length; ++c) {
-    for(var r = 0; r < rooms[c].length; ++r) {
+  for(var r = 0; r < rooms.length; ++r) {
+    for(var c = 0; c < rooms[r].length; ++c) {
       rooms[c][r].action();
     }
   }
@@ -113,9 +113,9 @@ function display_stats() {
 }
 
 window.onload = function () {
-  for(var r = 0; r < 3; ++r) {
+  for(var r = 0; r < rooms.length; ++r) {
     var row = document.getElementById("ship").appendChild(document.createElement("tr"));
-    for(var c = 0; c < 3; ++c) {
+    for(var c = 0; c < rooms[r].length; ++c) {
       var col = row.appendChild(document.createElement("td"));
       col.setAttribute("id", c + "," + r);
       createRoom(col, rooms[r][c]);
