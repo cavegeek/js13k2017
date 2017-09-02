@@ -106,6 +106,14 @@ function display_stats() {
   }
 }
 
+function run_step() {
+  for(var i = 0; i < tickfrac/30; ++i) {
+    tick();
+    rooms_tick();
+    display_stats();
+  }
+}
+
 window.onload = function () {
   var width = Math.ceil(Math.sqrt(rooms.length));
   var row;
@@ -133,6 +141,7 @@ window.onload = function () {
 <h1>Lost in Space</h1>
 </header>
 <main>
+<button onclick="window.setInterval(run_step, 500); this.disabled=true;">start</button>
 <section>
 <dl id="stats">
 </dl>
@@ -141,7 +150,6 @@ window.onload = function () {
   <table id="ship">
   </table>
 </section>
-<button onclick="rooms_tick(); tick(); display_stats()">Tick</button>
 </main>
 </body>
 </html>
