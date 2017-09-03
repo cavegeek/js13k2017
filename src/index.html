@@ -2,8 +2,48 @@
 <head>
 <title>Lost in Space</title>
 <style>
+body {
+  background: black;
+  color: white;
+}
+
+header {
+  text-align: center;
+}
+
+button, select {
+  background: #888;
+  color: white;
+}
+
+.stats dl {
+  border: 0.5em ridge grey;
+  background-color: #444;
+  display: flex;
+  align-content: space-around;
+}
+
+.stats dt {
+  text-transform: uppercase;
+  color: gold;
+  flex: auto;
+}
+
+.stats dd {
+  background: black;
+  border: 1px solid white;
+  flex: auto;
+}
+
+table {
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1rem ridge grey;
+  border-radius: 3rem;
+}
+
 td {
-  border: 1px solid black;
+  border: 1px solid grey;
 }
 </style>
 </head>
@@ -18,7 +58,6 @@ function tick() {
   ship.clean_water -= crew*2/tickfrac;
   ship.waste_water += crew*2/tickfrac;
   ship.food -= crew*2/tickfrac;
-  ship.distance += 1;
   ship.days += 1/tickfrac;
 }
 
@@ -68,7 +107,6 @@ ship = {
   clean_water: 100, // litres
   waste_water: 100, // litres
   food: 100, // kilograms
-  distance: 0, // ticks
   days: 0
 };
 
@@ -102,9 +140,14 @@ function rooms_tick() {
   }
 }
 
+var fmt = Intl.NumberFormat("en-US", {
+  minimumIntegerDigits: 3,
+  minimumFractionDigits: 4,
+  maximumFractionDigits: 4});
+
 function display_stats() {
   for(var stat in ship) {
-    document.getElementById("stat_" + stat).textContent = ship[stat];
+    document.getElementById("stat_" + stat).textContent = fmt.format(ship[stat]);
   }
 }
 
@@ -132,8 +175,8 @@ window.onload = function () {
     stats.appendChild(document.createElement("dt")).textContent = stat;
     var data = stats.appendChild(document.createElement("dd"));
     data.setAttribute("id", "stat_" + stat);
-    data.textContent = ship[stat];
   }
+  display_stats();
 };
 </script>
 <style>
@@ -141,14 +184,14 @@ window.onload = function () {
 <body>
 <header>
 <h1>Lost in Space</h1>
+<button onclick="window.setInterval(run_step, 500); this.disabled=true;">start</button>
 </header>
 <main>
-<button onclick="window.setInterval(run_step, 500); this.disabled=true;">start</button>
-<section>
+<section class="stats">
 <dl id="stats">
 </dl>
 </section>
-<section>
+<section class="ship">
   <table id="ship">
   </table>
 </section>
