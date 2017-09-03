@@ -1,0 +1,33 @@
+Captain's Log to log what's happening and gve a bit of story to it.
+
+Crew Members who can be assigned to rooms to make the rooms work better.
+
+Rooms fail in interesting ways, for example the water purification room
+contaminates a lot of fresh water.
+
+Death on low oxygen, no food, etc.
+
+Better looks.
+
+Ambient music.
+
+Plants produce less when there's more oxygen.
+
+Ticks are too long, a day makes the values too large, do tenths of an hour.
+
+Notes:
+Atm oxygen 23.5%
+Lowset without increased fallibility: 19%
+Lowest human survive: 10%
+http://www.geography.hunter.cuny.edu/tbw/wc.notes/1.atmosphere/oxygen_and_human_requirements.htm
+
+Atm CO2: 0.04%
+Highest without effects: 0.1%
+Unsurvivable 0.4%
+
+Human uses 550L oxygen per day, releasing 550L CO2.
+500 plants balances out oxygen of 1 human (each plant releases 1L ocygen per day)
+
+A 12x12x10 room is about 50L, so we can call each room 50L of air.
+
+So each room has 11.75L oxygen, and 0.02L CO2 normally.
