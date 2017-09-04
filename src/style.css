@@ -1,0 +1,60 @@
+body {
+  background: black;
+  color: white;
+}
+
+header {
+  text-align: center;
+}
+
+button, select {
+  background: #888;
+  color: gold;
+}
+
+button:disabled {
+  color: grey;
+}
+
+.stats dl {
+  border: 0.5em ridge grey;
+  border-radius: 1rem;
+  background-color: #444;
+  display: flex;
+  align-content: space-around;
+  padding: 1em;
+}
+
+.stats dt {
+  text-transform: uppercase;
+  color: gold;
+  flex: 0 1 auto;
+  text-align: right;
+  margin: 0 1em;
+  padding: 0 0 0 1em;
+  border-left: 4px ridge gold;
+}
+
+.stats dt:first-of-type {
+  border-left: 0;
+}
+
+.stats dd {
+  background: black;
+  border: 1px solid white;
+  flex: auto;
+  text-align: left;
+  margin: 0;
+}
+
+table {
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1rem ridge grey;
+  border-radius: 3rem;
+}
+
+td {
+  border: 1px solid grey;
+}
+

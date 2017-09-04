@@ -1,51 +1,8 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>Lost in Space</title>
-<style>
-body {
-  background: black;
-  color: white;
-}
-
-header {
-  text-align: center;
-}
-
-button, select {
-  background: #888;
-  color: white;
-}
-
-.stats dl {
-  border: 0.5em ridge grey;
-  background-color: #444;
-  display: flex;
-  align-content: space-around;
-}
-
-.stats dt {
-  text-transform: uppercase;
-  color: gold;
-  flex: auto;
-}
-
-.stats dd {
-  background: black;
-  border: 1px solid white;
-  flex: auto;
-}
-
-table {
-  margin: 2rem auto;
-  padding: 2rem;
-  border: 1rem ridge grey;
-  border-radius: 3rem;
-}
-
-td {
-  border: 1px solid grey;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <script language="javascript">
 var crew = 10;
@@ -142,8 +99,8 @@ function rooms_tick() {
 
 var fmt = Intl.NumberFormat("en-US", {
   minimumIntegerDigits: 3,
-  minimumFractionDigits: 4,
-  maximumFractionDigits: 4});
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2});
 
 function display_stats() {
   for(var stat in ship) {
@@ -172,7 +129,7 @@ window.onload = function () {
   }
   var stats = document.getElementById("stats");
   for(var stat in ship) {
-    stats.appendChild(document.createElement("dt")).textContent = stat;
+    stats.appendChild(document.createElement("dt")).textContent = stat.replace('_', ' ');
     var data = stats.appendChild(document.createElement("dd"));
     data.setAttribute("id", "stat_" + stat);
   }
