@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Sound Test</title>
+<script>
+function init() {
+  var audio = new window.AudioContext;
+  var base = audio.createOscillator();
+  base.type = 'sine';
+  base.frequency.value = 110;
+  var vol = audio.createGain();
+  vol.gain.setValueAtTime(0.1, 0);
+  vol.gain.linearRampToValueAtTime(0.2, 1);
+  vol.gain.linearRampToValueAtTime(0.1, 2);
+  vol.gain.linearRampToValueAtTime(0.2, 3);
+  base.connect(vol);
+  vol.connect(audio.destination);
+  base.start();
+  var time = 3
+  window.setInterval(function() {
+    vol.gain.linearRampToValueAtTime(0.1, time+1);
+    vol.gain.linearRampToValueAtTime(0.2, time+2);
+    time += 2;
+  }, 2000);
+}
+window.onload = init;
+</script>
+</head>
+<body>
+</body>
