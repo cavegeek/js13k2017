@@ -7,35 +7,35 @@
 <script language="javascript">
 var crew = 10;
 
-var tickfrac = 10000; // fraction of a day
+var ticks_per_day = 10000;
 
 function tick() {
-  ship.oxygen -= crew*550/tickfrac;
-  ship.co2 += crew*550/tickfrac;
-  ship.clean_water -= crew*2/tickfrac;
-  ship.waste_water += crew*2/tickfrac;
-  ship.food -= crew*2/tickfrac;
-  ship.days += 1/tickfrac;
+  ship.oxygen -= crew*550/ticks_per_day;
+  ship.co2 += crew*550/ticks_per_day;
+  ship.clean_water -= crew*2/ticks_per_day;
+  ship.waste_water += crew*2/ticks_per_day;
+  ship.food -= crew*2/ticks_per_day;
+  ship.days += 1/ticks_per_day;
 }
 
 function hydroponic() {
   var prod = Math.min(500, Math.max(ship.co2, 0));
-  ship.food += prod/250/tickfrac; // Litres of CO2 to kilograms
-  ship.oxygen += prod/tickfrac;
-  ship.co2 -= prod/tickfrac;
+  ship.food += prod/250/ticks_per_day; // Litres of CO2 to kilograms
+  ship.oxygen += prod/ticks_per_day;
+  ship.co2 -= prod/ticks_per_day;
 }
 
 function water() {
-  if(ship.waste_water > 20/tickfrac) {
-    ship.waste_water -= 20/tickfrac;
-    ship.clean_water += 20/tickfrac;
+  if(ship.waste_water > 20/ticks_per_day) {
+    ship.waste_water -= 20/ticks_per_day;
+    ship.clean_water += 20/ticks_per_day;
   }
 }
 
 function oxygen() {
   if(ship.oxygen < rooms.length*50*23.5/100 || ship.co2 > rooms.length*50*0.04/100) {
-    ship.oxygen += 3000/tickfrac;
-    ship.co2 -= 3000/tickfrac;
+    ship.oxygen += 3000/ticks_per_day;
+    ship.co2 -= 3000/ticks_per_day;
   }
 }
 
@@ -109,7 +109,7 @@ function display_stats() {
 }
 
 function run_step() {
-  for(var i = 0; i < tickfrac/30; ++i) {
+  for(var i = 0; i < ticks_per_day/30; ++i) {
     tick();
     rooms_tick();
     display_stats();
