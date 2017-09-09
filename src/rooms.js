@@ -13,7 +13,7 @@ function water() {
 }
 
 function oxygen() {
-  if(ship.oxygen < rooms.length*50*23.5/100 || ship.co2 > rooms.length*50*0.04/100) {
+  if(ship.oxygen < rooms.length*50000*23.5/100 || ship.co2 > rooms.length*50000*0.04/100) {
     ship.oxygen += 3000/ticks_per_day;
     ship.co2 -= 3000/ticks_per_day;
   }
