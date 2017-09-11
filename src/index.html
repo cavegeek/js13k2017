@@ -86,7 +86,6 @@ function sum_things(scale) {
     accum(sum.up, scaled.up);
     accum(sum.down, scaled.down);
   }
-  accum(sum.up, ship);
   return sum;
 }
 
@@ -105,7 +104,7 @@ function combine_scale(scale0, scale1) {
 
 function unit_scale(scale) {
   for(var i in scale) {
-    if(i <= 1) {
+    if(scale[i] < 1) {
       return false;
     }
   }
@@ -114,10 +113,14 @@ function unit_scale(scale) {
 
 function calc_scale() {
   var scale = {};
-  var new_scale = calc_scale1(sum_things(scale));
+  var sum = sum_things(scale);
+  accum(sum.up, ship);
+  var new_scale = calc_scale1(sum);
   while(!unit_scale(new_scale)) {
     scale = combine_scale(scale, new_scale);
-    new_scale = calc_scale1(sum_things(scale));
+    sum = sum_things(scale);
+    accum(sum.up, ship);
+    new_scale = calc_scale1(sum);
   }
   return scale;
 }
