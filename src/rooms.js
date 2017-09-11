@@ -21,10 +21,10 @@ var water = {
 var oxygen = {
   name: "oxygen",
   up: {
-    oxygen: 3000
+    oxygen: 2000
   },
   down: {
-    co2: 3000
+    co2: 2000
   }
 };
 var empty = {
