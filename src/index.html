@@ -41,6 +41,9 @@ function dccum(x, y) {
 function calc_scale1(thing) {
   var scale = {};
   for(var i in thing.down) {
+    if(denull(thing.up[i]) < 0.001 && thing.down[i] < 0.001) {
+      continue;
+    }
     if(thing.down[i] > 0) {
       scale[i] = denull(thing.up[i]) / thing.down[i];
     }
