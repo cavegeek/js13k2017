@@ -5,26 +5,129 @@
 <title>Lost in Space</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
-<script>
-crew = 10;
-ticks_per_day = 10000;
-</script>
 <script src="rooms.js"></script>
 <script>
-function tick() {
-  ship.oxygen -= crew*550/ticks_per_day;
-  ship.co2 += crew*550/ticks_per_day;
-  ship.clean_water -= crew*2/ticks_per_day;
-  ship.waste_water += crew*2/ticks_per_day;
-  ship.food -= crew*2/ticks_per_day;
-  ship.days += 1/ticks_per_day;
+var crew = {
+  up: {
+    co2: 550,
+    waste_water: 4
+  },
+  down: {
+    oxygen: 550,
+    clean_water: 2,
+    food: 2
+  }
+};
+
+var crew_count = 10;
+var air_per_room = 50000;
+
+function denull(x) {
+  return x ? x : 0;
 }
 
-function room(func) {
-  return {
-    reliability: 10,
-    action: func
+function accum(x, y) {
+  for(var i in y) {
+    x[i] = denull(x[i]) + y[i];
   }
+}
+
+function dccum(x, y) {
+  for(var i in y) {
+    x[i] = denull(x[i]) - y[i];
+  }
+}
+
+function calc_scale1(thing) {
+  var scale = {};
+  for(var i in thing.down) {
+    if(thing.down[i] > 0) {
+      scale[i] = denull(thing.up[i]) / thing.down[i];
+    }
+  }
+  return scale;
+}
+
+function scale_of(thing, scale) {
+  var scale = 1;
+  for(var i in thing.down) {
+    if(scale[i]) {
+      scale = Math.min(scale, scale[i]);
+    }
+  }
+  return scale;
+}
+
+function mul(m, thing) {
+  var scaled = {up: {}, down: {}};
+  for(var i in thing.up) {
+    scaled.up[i] = m*thing.up[i];
+  }
+  for(var i in thing.down) {
+    scaled.down[i] = m*thing.down[i];
+  }
+  return scaled;
+}
+
+function scale_by(scale, thing) {
+  var min = 1;
+  for(var i in thing.down) {
+    if(scale[i]) {
+      min = Math.min(min, scale[i]);
+    }
+  }
+  return mul(min, thing);
+}
+
+function sum_things(scale) {
+  var sum = scale_by(scale, mul(crew_count, crew));
+  for(var i = 0; i < rooms.length; ++i) {
+    var scaled = scale_by(scale, rooms[i]);
+    accum(sum.up, scaled.up);
+    accum(sum.down, scaled.down);
+  }
+  accum(sum.up, ship);
+  return sum;
+}
+
+function combine_scale(scale0, scale1) {
+  var combined = {};
+  for(var i in scale0) {
+    combined[i] = scale1[i] ? scale0[i]*scale1[i] : scale0[i];
+  }
+  for(var i in scale1) {
+    if(!scale0[i]) {
+      combined[i] = scale1[i];
+    }
+  }
+  return combined;
+}
+
+function unit_scale(scale) {
+  for(var i in scale) {
+    if(i <= 1) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function calc_scale() {
+  var scale = {};
+  var new_scale = calc_scale1(sum_things(scale));
+  while(!unit_scale(new_scale)) {
+    scale = combine_scale(scale, new_scale);
+    new_scale = calc_scale1(sum_things(scale));
+  }
+  return scale;
+}
+
+function tick() {
+  var scale = calc_scale();
+  var sum = sum_things(scale);
+  accum(ship, sum.up);
+  dccum(ship, sum.down);
+  ship.days += 1;
 }
 
 rooms = [
@@ -32,11 +135,11 @@ water, empty, hydroponic, empty,
 empty, oxygen, empty, hydroponic,
 empty, empty, oxygen, empty,
 hydroponic, empty, empty, empty
-].map(room);
+];
 
 ship = {
-  oxygen: rooms.length*50000*23.5/100, // litres
-  co2: rooms.length*50000*0.04/100, // litres
+  oxygen: rooms.length*air_per_room*23.5/100, // litres
+  co2: rooms.length*air_per_room*0.04/100, // litres
   clean_water: 100, // litres
   waste_water: 100, // litres
   food: 100, // kilograms
@@ -51,25 +154,9 @@ function createRoom(elem, room) {
     var option = select.appendChild(document.createElement("option"))
     option.setAttribute("value", i);
     option.textContent = room_types[i].name;
-    if(room.action == room_types[i]) {
+    if(room.name == room_types[i].name) {
       option.setAttribute("selected", "selected");
     }
-  }
-  list.appendChild(document.createElement("dt")).textContent = "reliability";
-  var reliability = list.appendChild(document.createElement("dd"))
-  reliability.textContent = room.reliability;
-  select.onchange = function() {
-    if(room.reliability > 0) {
-      --room.reliability;
-      room.action = room_types[select.value];
-      reliability.textContent = room.reliability;
-    }
-  };
-}
-
-function rooms_tick() {
-  for(var i = 0; i < rooms.length; ++i) {
-    rooms[i].action();
   }
 }
 
@@ -85,11 +172,8 @@ function display_stats() {
 }
 
 function run_step() {
-  for(var i = 0; i < ticks_per_day/30; ++i) {
-    tick();
-    rooms_tick();
-    display_stats();
-  }
+  tick();
+  display_stats();
 }
 
 window.onload = function () {
@@ -117,7 +201,7 @@ window.onload = function () {
 <body>
 <header>
 <h1>Lost in Space</h1>
-<button onclick="window.setInterval(run_step, 500); this.disabled=true;">start</button>
+<button onclick="window.setInterval(run_step, 2000); this.disabled=true;">start</button>
 </header>
 <main>
 <section>
