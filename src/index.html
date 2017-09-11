@@ -107,7 +107,7 @@ function combine_scale(scale0, scale1) {
 
 function unit_scale(scale) {
   for(var i in scale) {
-    if(scale[i] < 1) {
+    if(scale[i] < 0.9999) {
       return false;
     }
   }
