@@ -152,7 +152,7 @@ ship = {
   days: 0
 };
 
-function createRoom(elem, room) {
+function createRoom(elem, ix) {
   var list = elem.appendChild(document.createElement("dl"));
   list.appendChild(document.createElement("dt")).textContent = "type";
   var select = list.appendChild(document.createElement("dd")).appendChild(document.createElement("select"));
@@ -160,9 +160,12 @@ function createRoom(elem, room) {
     var option = select.appendChild(document.createElement("option"))
     option.setAttribute("value", i);
     option.textContent = room_types[i].name;
-    if(room.name == room_types[i].name) {
+    if(rooms[ix].name == room_types[i].name) {
       option.setAttribute("selected", "selected");
     }
+  }
+  select.onchange= function() {
+    rooms[ix] = room_types[select.value];
   }
 }
 
@@ -191,7 +194,7 @@ window.onload = function () {
     }
     var col = row.appendChild(document.createElement("td"));
     col.setAttribute("id", "room" + i);
-    createRoom(col, rooms[i]);
+    createRoom(col, i);
   }
   var stats = document.getElementById("stats");
   for(var stat in ship) {
