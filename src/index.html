@@ -64,7 +64,8 @@ var fmt = Intl.NumberFormat("en-US", {
 
 function display_stats() {
   for(var stat in ship) {
-    document.getElementById("stat_" + stat).textContent = fmt.format(ship[stat]);
+    document.getElementById("stat_" + stat).textContent =
+        fmt.format(ship[stat]);
   }
 }
 
