@@ -142,7 +142,7 @@ function plog(priority, msg) {
 
 function capn_scale(scale, priority, msg) {
   if(scale < 0.9999) {
-    plog(msg);
+    plog(priority, msg);
   }
 }
 
@@ -200,15 +200,15 @@ function run_step() {
   accum(delta, sum.up);
   dccum(delta, sum.down);
   ship.days += days_per_tick;
-  update_crew(scale);
   capn_scale(scale.food, 3,
     "We don't have enough food, hopefully we can grow more in time.");
   capn_scale(scale.co2, 1,
     "Our plants are not growing fast. It looks like they don't have enough co2.");
-  capn_scale(scale.oxygen, 10,
+  capn_scale(scale.oxygen, 40,
     "The crew is feeling tired and dizzy. Our oxygen is running low.");
   capn_scale(scale.clean_water, 7,
     "Everyone is thirsty, we're lacking clean water.");
+  update_crew(scale);
   display_stats();
 }
 
