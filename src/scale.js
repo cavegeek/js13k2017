@@ -17,8 +17,12 @@ function dccum(x, y) {
 function calc_scale1(thing) {
   var scale = {};
   for(var i in thing.down) {
-    if(denull(thing.up[i]) < 0.001 && thing.down[i] < 0.001) {
-      continue;
+    if(denull(thing.up[i]) < 0.01) {
+      if(thing.down[i] < 0.01) {
+        continue;
+      } else {
+        scale[i] = 0;
+      }
     }
     if(thing.down[i] > 0) {
       scale[i] = denull(thing.up[i]) / thing.down[i];
@@ -87,13 +91,15 @@ function combine_scale(scale0, scale1) {
   return combined;
 }
 
-function unit_scale(scale) {
-  for(var i in scale) {
-    if(scale[i] < 0.9999) {
-      return false;
+function changes(scale, new_scale) {
+  for(var i in new_scale) {
+    if(new_scale[i] < 0.0001 && scale[i] && scale[i] >= 0.0001) {
+      return true;
+    } else if(new_scale[i] < 0.9999) {
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
 function calc_scale() {
@@ -101,7 +107,8 @@ function calc_scale() {
   var sum = sum_things(scale);
   accum(sum.up, ship);
   var new_scale = calc_scale1(sum);
-  while(!unit_scale(new_scale)) {
+  var bail = 1000;
+  while(changes(scale, new_scale) && --bail) {
     scale = combine_scale(scale, new_scale);
     sum = sum_things(scale);
     accum(sum.up, ship);
