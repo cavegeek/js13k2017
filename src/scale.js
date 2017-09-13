@@ -33,7 +33,7 @@ function calc_scale1(thing) {
 function scale_of(thing, scale) {
   var scale = 1;
   for(var i in thing.down) {
-    if(scale[i]) {
+    if(scale.hasOwnProperty(i)) {
       scale = Math.min(scale, scale[i]);
     }
   }
@@ -54,7 +54,7 @@ function mul(m, thing) {
 function scale_by(scale, thing) {
   var min = 1;
   for(var i in thing.down) {
-    if(scale[i]) {
+    if(scale.hasOwnProperty(i)) {
       min = Math.min(min, scale[i]);
     }
   }
