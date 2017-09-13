@@ -18,11 +18,10 @@ function calc_scale1(thing) {
   var scale = {};
   for(var i in thing.down) {
     if(denull(thing.up[i]) < 0.01) {
-      if(thing.down[i] < 0.01) {
-        continue;
-      } else {
+      if(thing.down[i] > 0.01) {
         scale[i] = 0;
       }
+      continue;
     }
     if(thing.down[i] > 0) {
       scale[i] = denull(thing.up[i]) / thing.down[i];
@@ -93,9 +92,10 @@ function combine_scale(scale0, scale1) {
 
 function changes(scale, new_scale) {
   for(var i in new_scale) {
-    if(new_scale[i] < 0.0001 && scale[i] && scale[i] >= 0.0001) {
-      return true;
-    } else if(new_scale[i] < 0.9999) {
+    if(new_scale[i] < 0.0001 && scale.hasOwnProperty(i) && scale[i] < 0.0001) {
+      continue;
+    }
+    if(new_scale[i] < 0.9999) {
       return true;
     }
   }
