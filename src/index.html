@@ -81,13 +81,26 @@ function display_stats() {
   }
 }
 
+function log(msg) {
+  var log = document.getElementById("log");
+  var li = document.createElement("li");
+  li.textContent = "Day " + Math.floor(ship.days) + ": " + msg;
+  log.insertBefore(li, log.firstChild);
+}
+
 function capn(scale, priority, msg) {
   if(scale && scale < 0.9999) {
     if(Math.random() < priority/10) {
-      var log = document.getElementById("log");
-      var li = document.createElement("li");
-      li.textContent = "Day " + Math.floor(ship.days) + ": " + msg;
-      log.insertBefore(li, log.firstChild);
+      log(msg);
+    }
+  }
+}
+
+function update_crew(scale) {
+  if(scale.food && scale.food < 0.9999) {
+    if(Math.random() < (1 - scale.food) / (60 / days_per_tick)) {
+      --ship.crew;
+      log("We are one less. I fear we can't go on much longer. May our lost crew member rest in peace.");
     }
   }
 }
