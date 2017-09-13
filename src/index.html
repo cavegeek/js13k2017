@@ -18,10 +18,17 @@ var start_rooms = [
   hydroponic, empty, empty, empty
 ];
 
+var total_air = start_rooms.length*air_per_room;
+var min_oxygen = total_air*15/100;
+var good_oxygen = total_air*23.5/100;
+var good_co2 = total_air*0.04/100;
+var bad_co2 = total_air*0.1/100;
+var max_co2 = total_air*0.4/100;
+
 var start_ship = {
   crew: 10,
-  oxygen: start_rooms.length*air_per_room*23.5/100, // litres
-  co2: start_rooms.length*air_per_room*0.04/100, // litres
+  oxygen: good_oxygen-min_oxygen, // litres
+  co2: good_co2, // litres
   clean_water: 100, // litres
   waste_water: 100, // litres
   food: 100, // kilograms
@@ -142,6 +149,18 @@ function update_crew(scale) {
     }
   } else {
     parching = 0;
+  }
+  if(scale.oxygen < 1) {
+    plog(9, "It's getting hard to breathe, we need more oxygen.");
+    if(Math.random() > scale.oxygen) {
+      die("We are one less, dying because we can't breathe. May our lost crew member rest in peace.");
+    }
+  }
+  if(ship.co2 > bad_co2) {
+    plog(9, "The air has too much co2. It is hard to breathe.");
+    if(Math.random() < (ship.co2 - bad_co2)/(max_co2 - bad_co2)) {
+      die("We are one less, dying because we can't breathe. May our lost crew member rest in peace.");
+    }
   }
 }
 
