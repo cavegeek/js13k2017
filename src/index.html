@@ -69,6 +69,15 @@ function init() {
   }
   starving = 0;
   parching = 0;
+  var ul = document.getElementById("log");
+  while(ul.firstElementChild) {
+    ul.firstElementChild.remove();
+  }
+  log("We were on a routine trade mission when an unexplained malfunction " +
+    "sent our ship off course in an unknown direction. We appear to be in " +
+    "deep space. We have no idea where we are, and not enough fuel to turn " + 
+    "around. But the survival instinct is strong, we will live as long as " +
+    "we can on what we have.");
 }
 
 function createRoom(elem, ix) {
@@ -218,10 +227,6 @@ function start() {
 <section>
 <h1>Captain's Log</h1>
 <ul id="log">
-<li>Day 0: We were on a routine trade mission when an unexplained malfunction sent our
-ship off course in an unknown direction. We appear to be in deep space. We have
-no idea where we are, and not enough fuel to turn around. But the survival
-instinct is strong, we will live as long as we can on what we have.
 </ul>
 </section>
 </main>
