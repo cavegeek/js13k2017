@@ -100,13 +100,26 @@ window.onload = function () {
   }
   display_stats();
 };
+
+var updater;
+
+function start() {
+  if(updater) {
+    window.clearInterval(updater);
+    updater = false;
+    document.getElementById("start").textContent = "resume";
+  } else {
+    updater = window.setInterval(run_step, 2000);
+    document.getElementById("start").textContent = "pause";
+  }
+}
 </script>
 <style>
 </style>
 <body>
 <header>
 <h1>Lost in Space</h1>
-<button onclick="window.setInterval(run_step, 2000); this.disabled=true;">start</button>
+<button id="start" onclick="start()">start</button>
 </header>
 <main>
 <section>
