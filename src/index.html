@@ -29,19 +29,36 @@ var start_ship = {
 };
 
 var crew = {
-  up: {
-    co2: 550,
-    waste_water: 4
+  eating: {
+    up: {
+      waste_water: 2
+    },
+    down: {
+      food: 2
+    }
   },
-  down: {
-    oxygen: 550,
-    clean_water: 2,
-    food: 2
+  drinking: {
+    up: {
+      waste_water: 2
+    },
+    down: {
+      clean_water: 2
+    }
+  },
+  breathing: {
+    up: {
+      co2: 550
+    },
+    down: {
+      oxygen: 550
+    }
   }
 };
 
 var ship = {};
 var rooms = [];
+var starving = 0;
+var parching = 0;
 
 function init() {
   for(var i = 0; i < start_rooms.length; ++i) {
@@ -50,6 +67,8 @@ function init() {
   for(var i in start_ship) {
     ship[i] = start_ship[i];
   }
+  starving = 0;
+  parching = 0;
 }
 
 function createRoom(elem, ix) {
@@ -98,10 +117,22 @@ function capn(scale, priority, msg) {
 
 function update_crew(scale) {
   if(scale.food && scale.food < 0.9999) {
-    if(Math.random() < (1 - scale.food) / (60 / days_per_tick)) {
+    starving += (1 - scale.food)*days_per_tick;
+    if(starving > 5 && Math.random() < starving/30) {
       --ship.crew;
-      log("We are one less. I fear we can't go on much longer. May our lost crew member rest in peace.");
+      log("We are one less, and desperate for food. I fear we can't go on much longer. May our lost crew member rest in peace.");
     }
+  } else {
+    starving = 0;
+  }
+  if(scale.clean_water && scale.clean_water < 0.9999) {
+    parching += (1 - scale.clean_water)*days_per_tick;
+    if(parching > 2 && Math.random() < parching/3) {
+      --ship.crew;
+      log("We are one less, and desperate for clean water. I fear we can't go on much longer. May our lost crew member rest in peace.");
+    }
+  } else {
+    parching = 0;
   }
 }
 

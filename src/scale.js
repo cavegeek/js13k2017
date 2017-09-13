@@ -58,12 +58,18 @@ function scale_by(scale, thing) {
   return mul(min, thing);
 }
 
+function full_accum(sum, more) {
+  accum(sum.up, more.up);
+  accum(sum.down, more.down);
+}
+
 function sum_things(scale) {
-  var sum = scale_by(scale, mul(ship.crew, crew));
+  var sum = {up: {}, down: {}};
+  full_accum(sum, scale_by(scale, mul(ship.crew, crew.eating)));
+  full_accum(sum, scale_by(scale, mul(ship.crew, crew.drinking)));
+  full_accum(sum, scale_by(scale, mul(ship.crew, crew.breathing)));
   for(var i = 0; i < rooms.length; ++i) {
-    var scaled = scale_by(scale, rooms[i]);
-    accum(sum.up, scaled.up);
-    accum(sum.down, scaled.down);
+    full_accum(sum, scale_by(scale, rooms[i]));
   }
   return mul(days_per_tick, sum);
 }
