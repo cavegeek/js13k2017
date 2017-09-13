@@ -111,8 +111,19 @@ var fmt = Intl.NumberFormat("en-US", {
 
 function display_stats() {
   for(var stat in ship) {
-    document.getElementById("stat_" + stat).textContent =
-        fmt.format(ship[stat]);
+    if(stat == "oxygen") {
+      document.getElementById("stat_" + stat).textContent =
+          fmt.format((ship[stat] + min_oxygen)*100/total_air) + "%";
+    } else if(stat == "co2") {
+      document.getElementById("stat_" + stat).textContent =
+          fmt.format(ship[stat]*1000000/total_air) + "ppm";
+    } else {
+      var unit = "";
+      if(stat == "food") { unit = "kg"; }
+      if(stat == "clean_water" || stat == "waste_water") { unit = "L"; }
+      document.getElementById("stat_" + stat).textContent =
+          fmt.format(ship[stat]) + unit;
+    }
   }
 }
 
