@@ -123,20 +123,36 @@ function log(msg) {
   log.insertBefore(li, log.firstChild);
 }
 
-function capn_scale(scale, priority, msg) {
-  if(scale && scale < 0.9999) {
-    if(Math.random() < priority/10) {
-      log(msg);
-    }
+function plog(priority, msg) {
+  if(Math.random() < priority/40) {
+    log(msg);
   }
+}
+
+function capn_scale(scale, priority, msg) {
+  if(scale < 0.9999) {
+    plog(msg);
+  }
+}
+
+function die(msg) {
+  if(ship.crew > 1) {
+    log(msg);
+  } else {
+    log("Our struggles are at an end. I can't go on any longer.");
+    document.getElementById("start").textContent = "start over";
+    window.clearInterval(updater);
+    updater = false;
+    paused = false;
+  }
+  --ship.crew;
 }
 
 function update_crew(scale) {
   if(scale.food && scale.food < 0.9999) {
     starving += (1 - scale.food)*days_per_tick;
     if(starving > 5 && Math.random() < starving/30) {
-      --ship.crew;
-      log("We are one less, and desperate for food. I fear we can't go on much longer. May our lost crew member rest in peace.");
+      die("We are one less, and desperate for food. I fear we can't go on much longer. May our lost crew member rest in peace.");
     }
   } else {
     starving = 0;
