@@ -62,3 +62,20 @@ ul.vertical,
 .vertical li {
   display: block;
 }
+
+.log {
+  background: #444;
+  border: 1px solid grey;
+  display: block;
+  color: white;
+  font-size: large;
+  font-family: monospace;
+  width: 60%;
+  margin: auto;
+}
+
+section h1 {
+  display: block;
+  font-size: large;
+  text-align: center;
+}
