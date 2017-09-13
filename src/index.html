@@ -246,7 +246,7 @@ function start() {
     if(!paused) {
       init();
     }
-    updater = window.setInterval(run_step, 2000);
+    updater = window.setInterval(run_step, 1000);
     paused = true;
     document.getElementById("start").textContent = "pause";
   }
