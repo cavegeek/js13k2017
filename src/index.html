@@ -11,6 +11,23 @@
 var days_per_tick = 0.1;
 var air_per_room = 50000;
 
+var start_rooms = [
+  water, empty, hydroponic, empty,
+  empty, oxygen, empty, hydroponic,
+  empty, empty, oxygen, empty,
+  hydroponic, empty, empty, empty
+];
+
+var start_ship = {
+  crew: 10,
+  oxygen: start_rooms.length*air_per_room*23.5/100, // litres
+  co2: start_rooms.length*air_per_room*0.04/100, // litres
+  clean_water: 100, // litres
+  waste_water: 100, // litres
+  food: 100, // kilograms
+  days: 0
+};
+
 var crew = {
   up: {
     co2: 550,
@@ -23,22 +40,17 @@ var crew = {
   }
 };
 
-rooms = [
-water, empty, hydroponic, empty,
-empty, oxygen, empty, hydroponic,
-empty, empty, oxygen, empty,
-hydroponic, empty, empty, empty
-];
+var ship = {};
+var rooms = [];
 
-ship = {
-  crew: 10,
-  oxygen: rooms.length*air_per_room*23.5/100, // litres
-  co2: rooms.length*air_per_room*0.04/100, // litres
-  clean_water: 100, // litres
-  waste_water: 100, // litres
-  food: 100, // kilograms
-  days: 0
-};
+function init() {
+  for(var i = 0; i < start_rooms.length; ++i) {
+    rooms[i] = start_rooms[i];
+  }
+  for(var i in start_ship) {
+    ship[i] = start_ship[i];
+  }
+}
 
 function createRoom(elem, ix) {
   var list = elem.appendChild(document.createElement("dl"));
@@ -89,18 +101,20 @@ function run_step() {
   accum(delta, sum.up);
   dccum(delta, sum.down);
   ship.days += days_per_tick;
+  update_crew(scale);
   capn(scale.food, 3,
     "We don't have enough food, hopefully we can grow more in time.");
   capn(scale.co2, 1,
     "Our plants are not growing fast. It looks like they don't have enough co2.");
   capn(scale.oxygen, 10,
-    "It is hard to breathe, we are low on oxygen.");
+    "The crew is feeling tired and dizzy. Our oxygen is running low.");
   capn(scale.clean_water, 7,
     "Everyone is thirsty, we're lacking clean water.");
   display_stats();
 }
 
 window.onload = function () {
+  init();
   var width = Math.ceil(Math.sqrt(rooms.length));
   var row;
   for(var i = 0; i < rooms.length; ++i) {
@@ -121,14 +135,20 @@ window.onload = function () {
 };
 
 var updater;
+var paused = false;
 
 function start() {
   if(updater) {
     window.clearInterval(updater);
     updater = false;
+    paused = true;
     document.getElementById("start").textContent = "resume";
   } else {
+    if(!paused) {
+      init();
+    }
     updater = window.setInterval(run_step, 2000);
+    paused = true;
     document.getElementById("start").textContent = "pause";
   }
 }
