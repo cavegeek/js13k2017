@@ -69,6 +69,17 @@ function display_stats() {
   }
 }
 
+function capn(scale, priority, msg) {
+  if(scale && scale < 0.9999) {
+    if(Math.random() < priority/10) {
+      var log = document.getElementById("log");
+      var li = document.createElement("li");
+      li.textContent = "Day " + Math.floor(ship.days) + ": " + msg;
+      log.insertBefore(li, log.firstChild);
+    }
+  }
+}
+
 function run_step() {
   var scale = calc_scale();
   var sum = sum_things(scale);
@@ -78,6 +89,14 @@ function run_step() {
   accum(delta, sum.up);
   dccum(delta, sum.down);
   ship.days += days_per_tick;
+  capn(scale.food, 3,
+    "We don't have enough food, hopefully we can grow more in time.");
+  capn(scale.co2, 1,
+    "Our plants are not growing fast. It looks like they don't have enough co2.");
+  capn(scale.oxygen, 10,
+    "It is hard to breathe, we are low on oxygen.");
+  capn(scale.clean_water, 7,
+    "Everyone is thirsty, we're lacking clean water.");
   display_stats();
 }
 
@@ -134,7 +153,7 @@ function start() {
 </section>
 <section>
 <h1>Captain's Log</h1>
-<ul class="log">
+<ul id="log">
 <li>Day 0: We were on a routine trade mission when an unexplained malfunction sent our
 ship off course in an unknown direction. We appear to be in deep space. We have
 no idea where we are, and not enough fuel to turn around. But the survival

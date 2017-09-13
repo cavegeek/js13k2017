@@ -63,7 +63,7 @@ ul.vertical,
   display: block;
 }
 
-.log {
+#log {
   background: #444;
   border: 1px solid grey;
   display: block;
